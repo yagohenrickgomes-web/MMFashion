@@ -204,9 +204,9 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
     try { return JSON.parse(localStorage.getItem('mmfashion_' + key) || '[]'); }
     catch(e){ return []; }
   }
-  const pedidos = getData('pedidos');
-  const financeiro = getData('financeiro');
-  const clientes = getData('clientes_admin');
+  const pedidos = getData('pedidos_v2');
+  const financeiro = getData('financeiro_v2');
+  const clientes = getData('clientes_admin_v2');
 
   const receitaTotal = financeiro.filter(f => f.tipo === 'Receita').reduce((s,f) => s + (parseFloat(f.valor)||0), 0);
   const despesaTotal = financeiro.filter(f => f.tipo === 'Despesa').reduce((s,f) => s + (parseFloat(f.valor)||0), 0);

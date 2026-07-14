@@ -190,7 +190,7 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
    ESTOQUE
    ============================================================ */
 AdminCRUD.init({
-  storageKey: 'estoque',
+  storageKey: 'estoque_v2',
   title: 'Estoque',
   itemLabel: 'Item de Estoque',
   subtitle: 'Cadastre manualmente (com foto) ou importe uma planilha Excel',
@@ -215,14 +215,7 @@ AdminCRUD.init({
     { key:'quantidade', label:'Quantidade atual', type:'number', required:true },
     { key:'minimo', label:'Estoque mínimo (alerta)', type:'number', default:5 },
   ],
-  sampleData: [
-    { produto:'Vestido Midi Alfaiataria', variacao:'Preto / M', quantidade:24, minimo:5,
-      foto:'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=100&q=70&auto=format&fit=crop' },
-    { produto:'Perfume Fleur Noir 100ml', variacao:'—', quantidade:3, minimo:5,
-      foto:'https://images.unsplash.com/photo-1543422655-ac1c6ca993ed?w=100&q=70&auto=format&fit=crop' },
-    { produto:'Blazer Alfaiataria Premium', variacao:'Bege / P', quantidade:11, minimo:5,
-      foto:'https://images.unsplash.com/photo-1571513722275-4b41940f54b8?w=100&q=70&auto=format&fit=crop' },
-  ],
+  sampleData: [],
 });
 
 /* ---------- IMPORTAR VIA EXCEL ---------- */

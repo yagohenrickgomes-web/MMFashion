@@ -131,41 +131,36 @@
         <div class="kpi-card reveal">
           <div class="kpi-top">
             <div class="kpi-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-            <span class="kpi-trend up">▲ 12,4%</span>
           </div>
-          <div class="kpi-value">R$ 18.420</div>
+          <div class="kpi-value">R$ 0,00</div>
           <div class="kpi-label">Vendas do dia</div>
         </div>
         <div class="kpi-card reveal">
           <div class="kpi-top">
             <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M6 2h12l1 4H5zM4 6h16l-1.5 14a2 2 0 0 1-2 2H7.5a2 2 0 0 1-2-2z"/></svg></div>
-            <span class="kpi-trend up">▲ 6,1%</span>
           </div>
-          <div class="kpi-value">248</div>
+          <div class="kpi-value">0</div>
           <div class="kpi-label">Pedidos</div>
         </div>
         <div class="kpi-card reveal">
           <div class="kpi-top">
             <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7"/></svg></div>
-            <span class="kpi-trend up">▲ 9,8%</span>
           </div>
-          <div class="kpi-value">R$ 6.980</div>
+          <div class="kpi-value">R$ 0,00</div>
           <div class="kpi-label">Lucro líquido</div>
         </div>
         <div class="kpi-card reveal">
           <div class="kpi-top">
             <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg></div>
-            <span class="kpi-trend up">▲ 3,4%</span>
           </div>
-          <div class="kpi-value">1.204</div>
+          <div class="kpi-value">0</div>
           <div class="kpi-label">Clientes ativos</div>
         </div>
         <div class="kpi-card reveal">
           <div class="kpi-top">
             <div class="kpi-icon"><svg viewBox="0 0 24 24"><path d="M20.59 13.41 12 22l-9-9 8.59-8.59A2 2 0 0 1 13 4h6a1 1 0 0 1 1 1v6a2 2 0 0 1-.41 1.41z"/></svg></div>
-            <span class="kpi-trend down">▼ 1,2%</span>
           </div>
-          <div class="kpi-value">356</div>
+          <div class="kpi-value">0</div>
           <div class="kpi-label">Produtos ativos</div>
         </div>
       </div>
@@ -279,105 +274,42 @@ const io = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
 /* ============================================================
-   LINE CHART (SVG puro)
+   LINE CHART — vazio até a loja ter vendas de verdade
    ============================================================ */
-const salesData = [12,15,10,18,22,19,25,21,28,24,30,27,33,31].map(v => v * 620);
 function drawLineChart(){
   const svg = document.getElementById('lineChart');
-  const W = 640, H = 220, pad = 20;
-  const max = Math.max(...salesData), min = Math.min(...salesData);
-  const stepX = (W - pad*2) / (salesData.length - 1);
-  const pts = salesData.map((v,i) => {
-    const x = pad + i*stepX;
-    const y = H - pad - ((v-min)/(max-min || 1)) * (H - pad*2);
-    return [x,y];
-  });
-  const linePath = pts.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-  const areaPath = linePath + ` L${pts[pts.length-1][0]},${H-pad} L${pts[0][0]},${H-pad} Z`;
-
   svg.innerHTML = `
-    <defs>
-      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#D982A6" stop-opacity=".28"/>
-        <stop offset="100%" stop-color="#D982A6" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    ${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad + i*(H-pad*2)/3}" x2="${W-pad}" y2="${pad + i*(H-pad*2)/3}" stroke="#2D2D2D" stroke-opacity=".06"/>`).join('')}
-    <path d="${areaPath}" fill="url(#areaGrad)"/>
-    <path d="${linePath}" fill="none" stroke="#D982A6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    ${pts.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#fff" stroke="#C8A96A" stroke-width="2"/>`).join('')}
-  `;
+    <text x="320" y="115" text-anchor="middle" font-family="Poppins" font-size="12.5" fill="#999">
+      Ainda não há vendas registradas
+    </text>`;
 }
 drawLineChart();
 
 /* ============================================================
-   DONUT CHART (SVG puro)
+   DONUT CHART — vazio até a loja ter vendas de verdade
    ============================================================ */
-const donutData = [
-  { name:'Vestidos', value:34, color:'#D982A6' },
-  { name:'Blusas', value:22, color:'#C8A96A' },
-  { name:'Perfumes', value:19, color:'#2D2D2D' },
-  { name:'Acessórios', value:15, color:'#e6c9d3' },
-  { name:'Outros', value:10, color:'#e9d9c9' },
-];
 function drawDonut(){
   const svg = document.getElementById('donutChart');
-  const R = 60, CX = 80, CY = 80, STROKE = 20;
-  const circ = 2 * Math.PI * R;
-  let offset = 0;
-  let paths = '';
-  donutData.forEach(d => {
-    const len = (d.value/100) * circ;
-    paths += `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${d.color}" stroke-width="${STROKE}"
-      stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${CX} ${CY})" stroke-linecap="butt"/>`;
-    offset += len;
-  });
-  svg.innerHTML = paths + `<text x="${CX}" y="${CY-4}" text-anchor="middle" font-family="Playfair Display" font-size="20" font-weight="700" fill="#2D2D2D">356</text>
-    <text x="${CX}" y="${CY+14}" text-anchor="middle" font-family="Poppins" font-size="9" fill="#777">vendas</text>`;
-
-  document.getElementById('donutLegend').innerHTML = donutData.map(d => `
-    <li><span class="name"><span class="legend-dot" style="background:${d.color}"></span>${d.name}</span><span class="val">${d.value}%</span></li>
-  `).join('');
+  svg.innerHTML = `
+    <circle cx="80" cy="80" r="60" fill="none" stroke="#eee" stroke-width="20"/>
+    <text x="80" y="76" text-anchor="middle" font-family="Playfair Display" font-size="20" font-weight="700" fill="#2D2D2D">0</text>
+    <text x="80" y="94" text-anchor="middle" font-family="Poppins" font-size="9" fill="#777">vendas</text>`;
+  document.getElementById('donutLegend').innerHTML =
+    `<li style="justify-content:center;color:var(--gray);font-size:12px;padding:14px 0;">Sem categorias vendidas ainda</li>`;
 }
 drawDonut();
 
 /* ============================================================
-   RECENT ORDERS
+   RECENT ORDERS — vazio até existir pedido de verdade
    ============================================================ */
-const orders = [
-  { name:'Marina Costa', init:'M', id:'#MMF-2481', total:'R$ 389,90', status:'entregue', label:'Entregue' },
-  { name:'Juliana Prado', init:'J', id:'#MMF-2480', total:'R$ 219,90', status:'transito', label:'Em Trânsito' },
-  { name:'Beatriz Lima', init:'B', id:'#MMF-2479', total:'R$ 899,00', status:'processando', label:'Processando' },
-  { name:'Camila Rocha', init:'C', id:'#MMF-2478', total:'R$ 159,90', status:'entregue', label:'Entregue' },
-  { name:'Rafaela Nunes', init:'R', id:'#MMF-2477', total:'R$ 349,90', status:'cancelado', label:'Cancelado' },
-];
-document.getElementById('ordersBody').innerHTML = orders.map(o => `
-  <tr>
-    <td><div class="cust-cell"><div class="cust-avatar">${o.init}</div>${o.name}</div></td>
-    <td>${o.id}</td>
-    <td>${o.total}</td>
-    <td><span class="status-pill status-${o.status}">${o.label}</span></td>
-  </tr>
-`).join('');
+document.getElementById('ordersBody').innerHTML =
+  `<tr><td colspan="4" style="text-align:center;color:var(--gray);padding:30px;">Nenhum pedido ainda.</td></tr>`;
 
 /* ============================================================
-   TOP PRODUCTS
+   TOP PRODUCTS — vazio até existir venda de verdade
    ============================================================ */
-const topProducts = [
-  { name:'Vestido Midi Alfaiataria', sold:128, pct:100, img:'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=100&q=70&auto=format&fit=crop' },
-  { name:'Perfume Fleur Noir 100ml', sold:96, pct:75, img:'https://images.unsplash.com/photo-1543422655-ac1c6ca993ed?w=100&q=70&auto=format&fit=crop' },
-  { name:'Blazer Alfaiataria Premium', sold:84, pct:66, img:'https://images.unsplash.com/photo-1571513722275-4b41940f54b8?w=100&q=70&auto=format&fit=crop' },
-  { name:'Bolsa Tote Couro Legítimo', sold:61, pct:48, img:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=100&q=70&auto=format&fit=crop' },
-];
-document.getElementById('topProducts').innerHTML = topProducts.map(p => `
-  <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(45,45,45,.05);">
-    <img src="${p.img}" class="prod-thumb" alt="${p.name}">
-    <div style="flex:1;">
-      <div class="prod-info"><strong>${p.name}</strong><span>${p.sold} vendas</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${p.pct}%"></div></div>
-    </div>
-  </div>
-`).join('');
+document.getElementById('topProducts').innerHTML =
+  `<p style="text-align:center;color:var(--gray);font-size:13px;padding:20px 0;">Nenhum produto vendido ainda.</p>`;
 </script>
 </body>
 </html>

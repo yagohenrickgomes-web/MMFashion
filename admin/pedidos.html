@@ -189,7 +189,7 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
    PEDIDOS
    ============================================================ */
 AdminCRUD.init({
-  storageKey: 'pedidos',
+  storageKey: 'pedidos_v2',
   title: 'Pedidos',
   itemLabel: 'Pedido',
   subtitle: 'Acompanhe e atualize o status de cada venda',
@@ -213,11 +213,7 @@ AdminCRUD.init({
     { key:'status', label:'Status', type:'select', options:['Processando','Pago','Em Trânsito','Entregue','Cancelado'] },
     { key:'data', label:'Data', type:'date' },
   ],
-  sampleData: [
-    { numero:'#MMF-2481', cliente:'Marina Costa', total:389.90, status:'Entregue', data:'2026-07-10' },
-    { numero:'#MMF-2480', cliente:'Juliana Prado', total:219.90, status:'Em Trânsito', data:'2026-07-12' },
-    { numero:'#MMF-2479', cliente:'Beatriz Lima', total:899.00, status:'Processando', data:'2026-07-13' },
-  ],
+  sampleData: [],
 });
 </script>
 </body>

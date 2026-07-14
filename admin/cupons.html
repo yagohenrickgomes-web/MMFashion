@@ -189,7 +189,7 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
    CUPONS
    ============================================================ */
 AdminCRUD.init({
-  storageKey: 'cupons',
+  storageKey: 'cupons_v2',
   title: 'Cupons',
   itemLabel: 'Cupom',
   subtitle: 'Crie e gerencie cupons de desconto da loja',
@@ -207,10 +207,7 @@ AdminCRUD.init({
     { key:'valor', label:'Valor', type:'number', required:true },
     { key:'validade', label:'Validade', type:'date' },
   ],
-  sampleData: [
-    { codigo:'MMF10', tipo:'Percentual', valor:10, validade:'2026-12-31' },
-    { codigo:'BEMVINDA', tipo:'Percentual', valor:15, validade:'2026-12-31' },
-  ],
+  sampleData: [],
 });
 </script>
 </body>

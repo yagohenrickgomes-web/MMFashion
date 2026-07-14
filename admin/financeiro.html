@@ -189,7 +189,7 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
    FINANCEIRO
    ============================================================ */
 AdminCRUD.init({
-  storageKey: 'financeiro',
+  storageKey: 'financeiro_v2',
   title: 'Financeiro',
   itemLabel: 'Lançamento',
   subtitle: 'Receitas e despesas da loja',
@@ -212,11 +212,7 @@ AdminCRUD.init({
     { key:'valor', label:'Valor (R$)', type:'number', required:true },
     { key:'data', label:'Data', type:'date' },
   ],
-  sampleData: [
-    { tipo:'Receita', categoria:'Vendas', descricao:'Vendas do dia', valor:18420.00, data:'2026-07-14' },
-    { tipo:'Despesa', categoria:'Fornecedor', descricao:'Compra de tecidos', valor:3200.00, data:'2026-07-10' },
-    { tipo:'Despesa', categoria:'Marketing', descricao:'Anúncios Instagram', valor:450.00, data:'2026-07-08' },
-  ],
+  sampleData: [],
 });
 </script>
 </body>

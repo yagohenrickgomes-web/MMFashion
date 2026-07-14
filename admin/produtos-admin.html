@@ -350,16 +350,7 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 /* ============================================================
    CADASTRO DE PRODUTOS — lógica de tipo -> vitrine
    ============================================================ */
-let produtos = [
-  { nome:'Vestido Midi Alfaiataria', categoria:'Vestidos', preco:389.90, estoque:24, vitrine:true,
-    img:'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=100&q=70&auto=format&fit=crop' },
-  { nome:'Perfume Fleur Noir 100ml', categoria:'Perfumes', preco:459.00, estoque:11, vitrine:true,
-    img:'https://images.unsplash.com/photo-1543422655-ac1c6ca993ed?w=100&q=70&auto=format&fit=crop' },
-  { nome:'Blazer Alfaiataria Premium', categoria:'Blusas', preco:299.90, estoque:3, vitrine:false,
-    img:'https://images.unsplash.com/photo-1571513722275-4b41940f54b8?w=100&q=70&auto=format&fit=crop' },
-  { nome:'Sandália Salto Bloco', categoria:'Sapatos', preco:349.90, estoque:0, vitrine:false,
-    img:'https://images.unsplash.com/photo-1651126581286-a6ae76cb5c78?w=100&q=70&auto=format&fit=crop' },
-];
+let produtos = [];
 
 let tipoSelecionado = null;
 
