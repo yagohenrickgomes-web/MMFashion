@@ -1,17 +1,32 @@
 import os
+import os
+import re
 from flask import Flask, jsonify, request, send_from_directory
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from email_validator import validate_email, EmailNotValidError
 
 from config import Config
 from models import db, Cliente, Funcionario
 
 bcrypt = Bcrypt()
 login_manager = LoginManager()
+limiter = Limiter(key_func=get_remote_address)
 
 # Pasta raiz do projeto (uma acima de /backend) onde ficam index.html, /pages e /admin
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+
+def senha_forte(senha):
+    """Mínimo 8 caracteres, com letra e número. Retorna (ok, mensagem)."""
+    if len(senha) < 8:
+        return False, 'A senha precisa ter no mínimo 8 caracteres.'
+    if not re.search(r'[A-Za-z]', senha) or not re.search(r'\d', senha):
+        return False, 'A senha precisa ter letras e números.'
+    return True, ''
 
 
 def create_app():
@@ -21,6 +36,7 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    limiter.init_app(app)
     CORS(app, supports_credentials=True)
 
     @login_manager.user_loader
@@ -60,48 +76,81 @@ def create_app():
 
     # ============================================================
     # AUTENTICAÇÃO — CLIENTES (loja)
+    # Cadastro simplificado: apenas nome, telefone, e-mail e senha
     # ============================================================
     @app.route('/api/clientes/cadastro', methods=['POST'])
+    @limiter.limit('5 per minute')  # evita bots criando várias contas em sequência
     def cadastro_cliente():
-        data = request.get_json()
-        if Cliente.query.filter_by(email=data.get('email')).first():
+        data = request.get_json(silent=True) or {}
+        nome = (data.get('nome') or '').strip()
+        telefone = (data.get('telefone') or '').strip()
+        email = (data.get('email') or '').strip().lower()
+        senha = data.get('senha') or ''
+
+        if not nome or len(nome) < 2:
+            return jsonify({'erro': 'Informe seu nome completo.'}), 400
+        if not telefone or len(re.sub(r'\D', '', telefone)) < 10:
+            return jsonify({'erro': 'Informe um telefone válido com DDD.'}), 400
+
+        try:
+            email_info = validate_email(email, check_deliverability=False)
+            email = email_info.normalized
+        except EmailNotValidError:
+            return jsonify({'erro': 'Informe um e-mail válido.'}), 400
+
+        ok, msg = senha_forte(senha)
+        if not ok:
+            return jsonify({'erro': msg}), 400
+
+        if Cliente.query.filter_by(email=email).first():
             return jsonify({'erro': 'Este e-mail já está cadastrado.'}), 400
 
-        senha_hash = bcrypt.generate_password_hash(data['senha']).decode('utf-8')
-        cliente = Cliente(
-            nome=data['nome'],
-            email=data['email'],
-            senha_hash=senha_hash,
-            telefone=data.get('telefone'),
-        )
+        senha_hash = bcrypt.generate_password_hash(senha).decode('utf-8')
+        cliente = Cliente(nome=nome, email=email, senha_hash=senha_hash, telefone=telefone)
         db.session.add(cliente)
         db.session.commit()
-        return jsonify({'mensagem': 'Conta criada com sucesso!', 'id': cliente.id}), 201
+        return jsonify({'mensagem': 'Conta criada com sucesso!'}), 201
 
     @app.route('/api/clientes/login', methods=['POST'])
+    @limiter.limit('8 per minute')  # trava tentativas de força bruta na senha
     def login_cliente():
-        data = request.get_json()
-        cliente = Cliente.query.filter_by(email=data.get('email')).first()
+        data = request.get_json(silent=True) or {}
+        email = (data.get('email') or '').strip().lower()
+        senha = data.get('senha') or ''
 
-        if cliente and bcrypt.check_password_hash(cliente.senha_hash, data.get('senha', '')):
-            login_user(cliente, remember=data.get('lembrar', False))
-            return jsonify({'mensagem': 'Login realizado!', 'nome': cliente.nome})
+        cliente = Cliente.query.filter_by(email=email).first()
 
-        return jsonify({'erro': 'E-mail ou senha inválidos.'}), 401
+        # Mesma mensagem de erro pra e-mail inexistente ou senha errada —
+        # evita que alguém descubra quais e-mails têm conta na loja
+        if not cliente or not bcrypt.check_password_hash(cliente.senha_hash, senha):
+            return jsonify({'erro': 'E-mail ou senha inválidos.'}), 401
+
+        if not cliente.ativo:
+            return jsonify({'erro': 'Esta conta está desativada. Fale com o suporte.'}), 403
+
+        login_user(cliente, remember=bool(data.get('lembrar')))
+        return jsonify({'mensagem': 'Login realizado!', 'nome': cliente.nome})
 
     # ============================================================
     # AUTENTICAÇÃO — PAINEL ADMINISTRATIVO
     # ============================================================
     @app.route('/api/admin/login', methods=['POST'])
+    @limiter.limit('8 per minute')
     def login_admin():
-        data = request.get_json()
-        func = Funcionario.query.filter_by(email=data.get('email')).first()
+        data = request.get_json(silent=True) or {}
+        email = (data.get('email') or '').strip().lower()
+        senha = data.get('senha') or ''
 
-        if func and func.ativo and bcrypt.check_password_hash(func.senha_hash, data.get('senha', '')):
-            login_user(func, remember=data.get('lembrar', False))
-            return jsonify({'mensagem': 'Login realizado!', 'nome': func.nome, 'permissao': func.permissao})
+        func = Funcionario.query.filter_by(email=email).first()
 
-        return jsonify({'erro': 'E-mail ou senha inválidos.'}), 401
+        if not func or not bcrypt.check_password_hash(func.senha_hash, senha):
+            return jsonify({'erro': 'E-mail ou senha inválidos.'}), 401
+
+        if not func.ativo:
+            return jsonify({'erro': 'Este usuário está desativado.'}), 403
+
+        login_user(func, remember=bool(data.get('lembrar')))
+        return jsonify({'mensagem': 'Login realizado!', 'nome': func.nome, 'permissao': func.permissao})
 
     @app.route('/api/logout', methods=['POST'])
     @login_required

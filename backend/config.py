@@ -21,5 +21,15 @@ class Config:
 
     SECRET_KEY = os.environ.get('SECRET_KEY', 'troque-esta-chave-em-producao')
 
-    # Sessão de login do cliente/admin
+    # ============================================================
+    # SEGURANÇA DE SESSÃO / COOKIES
+    # ============================================================
     PERMANENT_SESSION_LIFETIME = 60 * 60 * 24 * 7  # 7 dias ("lembrar de mim")
+    SESSION_COOKIE_HTTPONLY = True                  # JS não consegue ler o cookie de sessão
+    SESSION_COOKIE_SAMESITE = 'Lax'                 # protege contra CSRF básico
+    # Em produção (HTTPS no Render) o cookie só trafega criptografado.
+    # Em localhost (sem HTTPS) isso ficaria False pra não quebrar o teste.
+    SESSION_COOKIE_SECURE = os.environ.get('FLASK_ENV') == 'production'
+
+    # Limite de tentativas de login (proteção contra força bruta)
+    RATELIMIT_STORAGE_URI = 'memory://'

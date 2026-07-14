@@ -14,9 +14,7 @@ class Cliente(UserMixin, db.Model):
     nome = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(160), unique=True, nullable=False, index=True)
     senha_hash = db.Column(db.String(255), nullable=False)
-    telefone = db.Column(db.String(20))
-    cpf = db.Column(db.String(14), unique=True)
-    data_nascimento = db.Column(db.Date)
+    telefone = db.Column(db.String(20), nullable=False)
     ativo = db.Column(db.Boolean, default=True)
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
 
