@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — MM Fashion</title>
+<meta name="description" content="Entre na sua conta MM Fashion ou cadastre-se.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Parisienne&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --bg:#FAF8F5; --white:#FFFFFF; --text:#2D2D2D; --gray:#777777;
+  --pink:#D982A6; --gold:#C8A96A; --danger:#D64545; --success:#4CAF50;
+  --font-display:'Playfair Display', serif; --font-script:'Parisienne', cursive; --font-body:'Poppins', sans-serif;
+  --shadow-lg:0 20px 60px rgba(45,45,45,.14); --ease:cubic-bezier(.22,1,.36,1);
+}
+body{
+  font-family:var(--font-body); font-weight:300; color:var(--text);
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#F3E9EE,#FAF8F5 55%,#F6EFE3);
+  padding:20px;
+}
+.login-card{
+  width:100%; max-width:420px; background:var(--white); border-radius:24px; padding:44px 38px;
+  box-shadow:var(--shadow-lg); text-align:center;
+}
+.logo-mm{ font-family:var(--font-script); font-size:40px; line-height:1; color:var(--text); }
+.logo-fashion{
+  font-family:var(--font-body); font-weight:600; font-size:12px; letter-spacing:.32em; text-transform:uppercase;
+  background:linear-gradient(100deg,#8a6a2f 0%,#e9d6a3 22%,#fff6de 38%,#c8a96a 50%,#8a6a2f 62%,#f3e2b8 80%,#a8823f 100%);
+  background-size:220% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+  animation:shine 5s linear infinite; display:block; margin-top:-2px;
+}
+@keyframes shine{ to{ background-position:-220% center; } }
+
+.tabs{ display:flex; background:var(--bg); border-radius:100px; padding:4px; margin:30px 0 26px; }
+.tab-btn{
+  flex:1; padding:11px; border:none; border-radius:100px; background:transparent; font-size:12.5px;
+  font-weight:600; letter-spacing:.03em; text-transform:uppercase; color:var(--gray); cursor:pointer; transition:all .3s ease;
+}
+.tab-btn.active{ background:var(--text); color:#fff; }
+
+.field{ text-align:left; margin-bottom:16px; }
+.field label{ font-size:12px; font-weight:500; color:var(--gray); display:block; margin-bottom:7px; }
+.field input{
+  width:100%; padding:13px 16px; border:1px solid rgba(45,45,45,.15); border-radius:10px; font-size:14px;
+  font-family:var(--font-body); transition:border-color .25s ease;
+}
+.field input:focus{ outline:none; border-color:var(--gold); }
+.field .hint{ font-size:11px; color:var(--gray); margin-top:5px; display:block; }
+
+.remember-row{ display:flex; align-items:center; gap:8px; margin:-4px 0 20px; }
+.remember-row input{ width:15px; height:15px; accent-color:var(--gold); }
+.remember-row label{ font-size:12.5px; color:var(--gray); }
+
+.btn-submit{
+  width:100%; padding:15px; border:none; border-radius:100px; background:var(--text); color:#fff;
+  font-size:13px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; cursor:pointer;
+  transition:transform .3s var(--ease), background .3s ease;
+}
+.btn-submit:hover{ transform:translateY(-2px); background:#1c1a18; }
+.btn-submit:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+
+.msg{ font-size:12.5px; padding:11px 14px; border-radius:10px; margin-bottom:18px; display:none; text-align:left; }
+.msg.error{ background:rgba(214,69,69,.1); color:var(--danger); }
+.msg.success{ background:rgba(76,175,80,.1); color:var(--success); }
+.msg.show{ display:block; }
+
+.back-link{ display:inline-block; margin-top:24px; font-size:12px; color:var(--gray); }
+.back-link:hover{ color:var(--gold); }
+
+.form-panel{ display:none; }
+.form-panel.active{ display:block; }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <span class="logo-mm">MM</span>
+  <span class="logo-fashion">Fashion</span>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="entrar">Entrar</button>
+    <button class="tab-btn" data-tab="cadastrar">Criar Conta</button>
+  </div>
+
+  <div class="msg" id="msgBox"></div>
+
+  <!-- ============================================================
+       LOGIN — usado tanto por clientes quanto pela equipe/admin.
+       O backend identifica sozinho o tipo de conta e redireciona certo.
+       ============================================================ -->
+  <div class="form-panel active" id="panelEntrar">
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" required autocomplete="username" placeholder="seu@email.com">
+      </div>
+      <div class="field">
+        <label for="loginSenha">Senha</label>
+        <input type="password" id="loginSenha" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <div class="remember-row">
+        <input type="checkbox" id="loginLembrar">
+        <label for="loginLembrar">Manter conectada por 7 dias</label>
+      </div>
+      <button type="submit" class="btn-submit" id="btnLogin">Entrar</button>
+    </form>
+  </div>
+
+  <!-- ============================================================
+       CADASTRO — só para clientes da loja (nome, telefone, e-mail, senha)
+       ============================================================ -->
+  <div class="form-panel" id="panelCadastrar">
+    <form id="cadastroForm">
+      <div class="field">
+        <label for="cadNome">Nome completo</label>
+        <input type="text" id="cadNome" required placeholder="Seu nome">
+      </div>
+      <div class="field">
+        <label for="cadTelefone">Telefone</label>
+        <input type="tel" id="cadTelefone" required placeholder="(11) 98765-4321">
+      </div>
+      <div class="field">
+        <label for="cadEmail">E-mail</label>
+        <input type="email" id="cadEmail" required autocomplete="username" placeholder="seu@email.com">
+      </div>
+      <div class="field">
+        <label for="cadSenha">Senha</label>
+        <input type="password" id="cadSenha" required autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+        <span class="hint">Precisa ter letras e números.</span>
+      </div>
+      <button type="submit" class="btn-submit" id="btnCadastro">Criar minha conta</button>
+    </form>
+  </div>
+
+  <a href="../index.html" class="back-link">← Voltar para a loja</a>
+</div>
+
+<script>
+/* ============================================================
+   TROCA DE ABA (Entrar / Criar Conta)
+   ============================================================ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelector('.tab-btn.active').classList.remove('active');
+    btn.classList.add('active');
+    document.querySelector('.form-panel.active').classList.remove('active');
+    document.getElementById(btn.dataset.tab === 'entrar' ? 'panelEntrar' : 'panelCadastrar').classList.add('active');
+    hideMsg();
+  });
+});
+
+// Se veio de um redirect do painel admin (?admin=1), já mostra um aviso amigável
+if (new URLSearchParams(window.location.search).get('admin') === '1') {
+  showMsg('Faça login com sua conta para acessar o painel administrativo.', 'error');
+}
+
+function showMsg(text, type){
+  const box = document.getElementById('msgBox');
+  box.textContent = text;
+  box.className = `msg show ${type}`;
+}
+function hideMsg(){
+  document.getElementById('msgBox').classList.remove('show');
+}
+
+/* ============================================================
+   LOGIN (unificado — cliente ou administrativo)
+   ============================================================ */
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btnLogin');
+  hideMsg();
+  btn.disabled = true;
+  btn.textContent = 'Entrando...';
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: document.getElementById('loginEmail').value,
+        senha: document.getElementById('loginSenha').value,
+        lembrar: document.getElementById('loginLembrar').checked,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMsg(data.erro || 'Não foi possível entrar.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      return;
+    }
+
+    // O backend já diz pra onde ir: painel admin (se for da equipe) ou a loja (se for cliente)
+    window.location.href = data.redirect || '../index.html';
+  } catch (err) {
+    showMsg('Erro de conexão. Verifique sua internet e tente de novo.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+});
+
+/* ============================================================
+   CADASTRO (somente clientes da loja)
+   ============================================================ */
+document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btnCadastro');
+  hideMsg();
+  btn.disabled = true;
+  btn.textContent = 'Criando conta...';
+
+  try {
+    const res = await fetch('/api/clientes/cadastro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        nome: document.getElementById('cadNome').value,
+        telefone: document.getElementById('cadTelefone').value,
+        email: document.getElementById('cadEmail').value,
+        senha: document.getElementById('cadSenha').value,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMsg(data.erro || 'Não foi possível criar sua conta.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Criar minha conta';
+      return;
+    }
+
+    showMsg('Conta criada! Faça login para continuar.', 'success');
+    document.querySelector('[data-tab="entrar"]').click();
+    document.getElementById('loginEmail').value = document.getElementById('cadEmail').value;
+  } catch (err) {
+    showMsg('Erro de conexão. Verifique sua internet e tente de novo.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Criar minha conta';
+  }
+});
+</script>
+</body>
+</html>

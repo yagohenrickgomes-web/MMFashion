@@ -419,12 +419,15 @@ a:focus-visible, button:focus-visible, input:focus-visible{ outline:2px solid va
 
     <div class="sidebar-foot">
       <div class="sidebar-user">
-        <div class="avatar">M</div>
+        <div class="avatar" id="userAvatar">M</div>
         <div class="info">
-          <strong>Marina Duarte</strong>
-          <span>Administradora</span>
+          <strong id="userName">Carregando...</strong>
+          <span id="userRole">—</span>
         </div>
       </div>
+      <button id="btnLogout" style="width:100%;margin-top:14px;padding:9px;border-radius:10px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;transition:all .25s ease;">
+        Sair
+      </button>
     </div>
   </aside>
 
@@ -630,6 +633,33 @@ a:focus-visible, button:focus-visible, input:focus-visible{ outline:2px solid va
 </div>
 
 <script>
+/* ============================================================
+   SESSÃO / LOGOUT
+   ============================================================ */
+(async function checkSession(){
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    const data = await res.json();
+    if (data.autenticado) {
+      document.getElementById('userName').textContent = data.nome;
+      document.getElementById('userAvatar').textContent = data.nome.charAt(0).toUpperCase();
+      document.getElementById('userRole').textContent = 'Administradora';
+    } else {
+      window.location.href = 'login.html';
+    }
+  } catch (e) {
+    console.warn('Não foi possível verificar a sessão.', e);
+  }
+})();
+
+document.getElementById('btnLogout').addEventListener('click', async () => {
+  try {
+    await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+  } finally {
+    window.location.href = 'login.html';
+  }
+});
+
 /* ============================================================
    SIDEBAR COLLAPSE
    ============================================================ */

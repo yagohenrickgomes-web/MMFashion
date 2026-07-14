@@ -1,7 +1,7 @@
 import os
 import os
 import re
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, redirect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -61,6 +61,12 @@ def create_app():
 
     @app.route('/admin/<path:filename>')
     def admin_pages(filename):
+        # Todo o painel exige sessão de FUNCIONÁRIO autenticado.
+        # Sem sessão válida, manda pra tela de login única (pages/login.html) —
+        # não existe mais uma URL de login "escondida" só pro admin.
+        if not current_user.is_authenticated or not isinstance(current_user._get_current_object(), Funcionario):
+            return redirect('/pages/login.html?admin=1')
+
         return send_from_directory(os.path.join(FRONTEND_DIR, 'admin'), filename)
 
     @app.route('/assets/<path:filename>')
@@ -74,9 +80,51 @@ def create_app():
     def ping():
         return jsonify({'status': 'ok', 'message': 'MM Fashion API rodando 🚀'})
 
+    @app.route('/api/login', methods=['POST'])
+    @limiter.limit('8 per minute')
+    def login_unificado():
+        """
+        Login único usado pela tela pages/login.html.
+        Primeiro verifica se o e-mail pertence a um FUNCIONÁRIO (admin/equipe);
+        se não for, verifica se pertence a um CLIENTE da loja.
+        Nunca existe cruzamento entre as duas tabelas — são contas completamente separadas.
+        """
+        data = request.get_json(silent=True) or {}
+        email = (data.get('email') or '').strip().lower()
+        senha = data.get('senha') or ''
+        lembrar = bool(data.get('lembrar'))
+
+        # 1) Tenta como FUNCIONÁRIO (equipe / administrativo)
+        func = Funcionario.query.filter_by(email=email).first()
+        if func and bcrypt.check_password_hash(func.senha_hash, senha):
+            if not func.ativo:
+                return jsonify({'erro': 'Este usuário está desativado.'}), 403
+            login_user(func, remember=lembrar)
+            return jsonify({
+                'mensagem': 'Login realizado!',
+                'nome': func.nome,
+                'tipo': 'funcionario',
+                'redirect': '/admin/painel-admin.html',
+            })
+
+        # 2) Tenta como CLIENTE (loja)
+        cliente = Cliente.query.filter_by(email=email).first()
+        if cliente and bcrypt.check_password_hash(cliente.senha_hash, senha):
+            if not cliente.ativo:
+                return jsonify({'erro': 'Esta conta está desativada. Fale com o suporte.'}), 403
+            login_user(cliente, remember=lembrar)
+            return jsonify({
+                'mensagem': 'Login realizado!',
+                'nome': cliente.nome,
+                'tipo': 'cliente',
+                'redirect': '/index.html',
+            })
+
+        # Mesma mensagem pros dois casos — não dá pra descobrir se o e-mail existe ou não
+        return jsonify({'erro': 'E-mail ou senha inválidos.'}), 401
+
     # ============================================================
-    # AUTENTICAÇÃO — CLIENTES (loja)
-    # Cadastro simplificado: apenas nome, telefone, e-mail e senha
+    # AUTENTICAÇÃO — CLIENTES (loja) — cadastro continua separado do admin
     # ============================================================
     @app.route('/api/clientes/cadastro', methods=['POST'])
     @limiter.limit('5 per minute')  # evita bots criando várias contas em sequência
@@ -161,7 +209,8 @@ def create_app():
     @app.route('/api/me')
     def me():
         if current_user.is_authenticated:
-            return jsonify({'autenticado': True, 'nome': current_user.nome})
+            tipo = 'funcionario' if isinstance(current_user._get_current_object(), Funcionario) else 'cliente'
+            return jsonify({'autenticado': True, 'nome': current_user.nome, 'tipo': tipo})
         return jsonify({'autenticado': False})
 
     return app

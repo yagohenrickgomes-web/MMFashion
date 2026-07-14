@@ -77,7 +77,11 @@ MM Fashion/
    cd backend
    python init_db.py
    ```
-   Isso cria as tabelas e o admin padrão (`admin@mmfashion.com.br` / `mudar123` — troque depois).
+   Isso cria as tabelas e as duas contas administrativas:
+   - Melissa (proprietária): `melissa@mmfashion.com.br` / `Melissa@2026`
+   - Yago (desenvolvedor): `yago@mmfashion.com.br` / `YagoGomes@2026`
+
+   **Troque essas senhas assim que possível.** O login é feito em `/pages/login.html` — é a mesma tela usada pelos clientes da loja; o sistema reconhece sozinho que é uma conta da equipe e manda direto pro painel.
 
 8. O Railway te dá uma URL pública tipo `https://mmfashion-production.up.railway.app` — é só acessar. O painel fica em `/admin/painel-admin.html`.
 
