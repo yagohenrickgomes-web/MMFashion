@@ -83,6 +83,29 @@ def create_app():
             return redirect('/login?admin=1')
         return send_from_directory(os.path.join(FRONTEND_DIR, 'admin'), 'produtos-admin.html')
 
+    # Demais módulos do painel (todos exigem sessão de funcionário)
+    _ADMIN_SUBPAGES = {
+        'pedidos': 'pedidos.html',
+        'categorias': 'categorias.html',
+        'clientes': 'clientes.html',
+        'estoque': 'estoque.html',
+        'financeiro': 'financeiro.html',
+        'relatorios': 'relatorios.html',
+        'cupons': 'cupons.html',
+        'funcionarios': 'funcionarios.html',
+        'configuracoes': 'configuracoes.html',
+    }
+
+    def _make_admin_subpage_view(filename):
+        def view():
+            if not current_user.is_authenticated or not isinstance(current_user._get_current_object(), Funcionario):
+                return redirect('/login?admin=1')
+            return send_from_directory(os.path.join(FRONTEND_DIR, 'admin'), filename)
+        return view
+
+    for _slug, _filename in _ADMIN_SUBPAGES.items():
+        app.add_url_rule(f'/admin/{_slug}', endpoint=f'admin_{_slug}', view_func=_make_admin_subpage_view(_filename))
+
     @app.route('/pages/<path:filename>')
     def pages(filename):
         return send_from_directory(os.path.join(FRONTEND_DIR, 'pages'), filename)
@@ -107,6 +130,23 @@ def create_app():
     @app.route('/api/ping')
     def ping():
         return jsonify({'status': 'ok', 'message': 'MM Fashion API rodando 🚀'})
+
+    # ============================================================
+    # DIAGNÓSTICO TEMPORÁRIO — remova esta rota depois de confirmar
+    # que o app está conectado no banco certo (não expõe senha).
+    # ============================================================
+    @app.route('/api/db-check')
+    def db_check():
+        from sqlalchemy import inspect
+        try:
+            insp = inspect(db.engine)
+            tabelas = insp.get_table_names()
+        except Exception as e:
+            return jsonify({'erro': str(e)}), 500
+
+        uri = app.config['SQLALCHEMY_DATABASE_URI']
+        host_visivel = uri.split('@')[-1] if '@' in uri else uri  # esconde usuário/senha
+        return jsonify({'conectado_em': host_visivel, 'tabelas_encontradas': tabelas})
 
     @app.route('/api/login', methods=['POST'])
     @limiter.limit('8 per minute')

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro de Produtos — MM Fashion</title>
+<title>Estoque — MM Fashion</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -374,7 +374,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{ outline:2px solid va
         <svg viewBox="0 0 24 24"><path d="M6 2h12l1 4H5zM4 6h16l-1.5 14a2 2 0 0 1-2 2H7.5a2 2 0 0 1-2-2z"/></svg>
         <span>Pedidos</span><span class="badge-count">12</span>
       </a>
-      <a class="nav-item active" data-page="Produtos" href="/admin/produtos">
+      <a class="nav-item" data-page="Produtos" href="/admin/produtos">
         <svg viewBox="0 0 24 24"><path d="M20.59 13.41 12 22l-9-9 8.59-8.59A2 2 0 0 1 13 4h6a1 1 0 0 1 1 1v6a2 2 0 0 1-.41 1.41z"/><circle cx="15" cy="8" r="1.3"/></svg>
         <span>Produtos</span>
       </a>
@@ -387,7 +387,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{ outline:2px solid va
         <span>Clientes</span>
       </a>
       <div class="nav-label"><span>Operação</span></div>
-      <a class="nav-item" data-page="Estoque" href="/admin/estoque">
+      <a class="nav-item active" data-page="Estoque" href="/admin/estoque">
         <svg viewBox="0 0 24 24"><path d="M21 8V6a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 6v12a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 18v-2M3.27 6.96 12 12l8.73-5.04M12 22.08V12"/></svg>
         <span>Estoque</span>
       </a>
@@ -437,7 +437,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{ outline:2px solid va
         <button class="collapse-btn" id="collapseBtn" aria-label="Recolher menu">
           <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
-        <div class="breadcrumb">Painel <strong>/ Produtos</strong></div>
+        <div class="breadcrumb">Painel <strong>/ Estoque</strong></div>
       </div>
       <div class="topbar-right">
         <div class="topbar-search">
@@ -455,175 +455,19 @@ a:focus-visible, button:focus-visible, input:focus-visible{ outline:2px solid va
     <div class="content">
       <div class="page-head reveal">
         <div>
-          <h1>Cadastro de Produtos</h1>
-          <p>Escolha o tipo de peça e cadastre — ela já aparece direto na vitrine certa do site.</p>
-        </div>
-        <button class="btn-new-product" id="btnNovoProduto">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Novo Produto
-        </button>
-      </div>
-
-      <!-- ============================================================
-           ETAPA 1 — ESCOLHA DO TIPO DE PRODUTO
-           ============================================================ -->
-      <div class="panel reveal" id="stepType">
-        <div class="panel-head">
-          <div><h3>1. Que tipo de produto é esse?</h3><span class="sub">Isso define em qual vitrine do site ele vai aparecer</span></div>
-        </div>
-        <div class="type-grid">
-          <button class="type-card" data-type="Vestidos" data-icon="dress">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><path d="M6 2l3 4h6l3-4M4 22V8l4-4M20 22V8l-4-4M4 22h16"/></svg></span>
-            <span>Vestidos</span>
-          </button>
-          <button class="type-card" data-type="Blusas" data-icon="blusa">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><path d="M8 3l4 3 4-3 3 5-3 2v11H5V10L2 8z"/></svg></span>
-            <span>Blusas</span>
-          </button>
-          <button class="type-card" data-type="Calças" data-icon="calca">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><path d="M6 2h12l1 6-3 14h-4l-2-9-2 9H4L1 8z"/></svg></span>
-            <span>Calças</span>
-          </button>
-          <button class="type-card" data-type="Bolsas" data-icon="bolsa">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><path d="M4 10h16l-1 11H5zM8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
-            <span>Bolsas</span>
-          </button>
-          <button class="type-card" data-type="Sapatos" data-icon="sapato">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><path d="M4 15l3-9h10l3 9-8 6z"/></svg></span>
-            <span>Sapatos</span>
-          </button>
-          <button class="type-card" data-type="Perfumes" data-icon="perfume">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><path d="M9 2h6v4l2 2v14H7V8l2-2z"/></svg></span>
-            <span>Perfumes</span>
-          </button>
-          <button class="type-card" data-type="Cosméticos" data-icon="cosmetico">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
-            <span>Cosméticos</span>
-          </button>
-          <button class="type-card" data-type="Acessórios" data-icon="acessorio">
-            <span class="type-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></span>
-            <span>Acessórios</span>
-          </button>
+          <h1>Estoque</h1>
+          <p>Controle entradas, saídas e alertas de estoque mínimo.</p>
         </div>
       </div>
 
-      <!-- ============================================================
-           ETAPA 2 — FORMULÁRIO (some até escolher o tipo)
-           ============================================================ -->
-      <div class="panel reveal" id="stepForm" style="display:none;">
-        <div class="panel-head">
-          <div>
-            <h3>2. Dados do produto <span class="type-chip" id="typeChip"></span></h3>
-            <span class="sub">Esse produto vai aparecer na vitrine de <strong id="typeChipText">—</strong> no site</span>
-          </div>
-          <button class="link-btn" id="btnTrocarTipo">Trocar tipo</button>
+      <div class="panel reveal" style="text-align:center; padding:70px 30px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;">
+          <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.4;"><path d="M21 8V6a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 6v12a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 18v-2M3.27 6.96 12 12l8.73-5.04M12 22.08V12"/></svg>
         </div>
-
-        <form id="productForm">
-          <div class="form-grid">
-            <div class="field field-full">
-              <label>Nome do produto</label>
-              <input type="text" placeholder="Ex: Vestido Midi Alfaiataria" required>
-            </div>
-            <div class="field">
-              <label>Subcategoria</label>
-              <input type="text" placeholder="Ex: Midi, Longo, Casual...">
-            </div>
-            <div class="field">
-              <label>Marca</label>
-              <input type="text" placeholder="Ex: MM Fashion, MM Atelier...">
-            </div>
-            <div class="field field-full">
-              <label>Descrição</label>
-              <textarea rows="3" placeholder="Descreva tecido, caimento, ocasião de uso..."></textarea>
-            </div>
-
-            <div class="field">
-              <label>Preço (R$)</label>
-              <input type="number" step="0.01" placeholder="0,00" required>
-            </div>
-            <div class="field">
-              <label>Preço promocional (R$)</label>
-              <input type="number" step="0.01" placeholder="opcional">
-            </div>
-            <div class="field">
-              <label>SKU</label>
-              <input type="text" placeholder="Ex: MMF-VES-001">
-            </div>
-            <div class="field">
-              <label>Código de barras</label>
-              <input type="text" placeholder="opcional">
-            </div>
-
-            <div class="field">
-              <label>Peso (kg)</label>
-              <input type="number" step="0.01" placeholder="0,00">
-            </div>
-            <div class="field">
-              <label>Fornecedor</label>
-              <select><option>Selecione...</option><option>Fornecedor A</option><option>Fornecedor B</option></select>
-            </div>
-            <div class="field">
-              <label>Cores disponíveis</label>
-              <input type="text" placeholder="Ex: Preto, Bege, Rosé (separe por vírgula)">
-            </div>
-            <div class="field">
-              <label>Tamanhos disponíveis</label>
-              <input type="text" placeholder="Ex: PP, P, M, G, GG">
-            </div>
-
-            <div class="field">
-              <label>Estoque inicial</label>
-              <input type="number" placeholder="0">
-            </div>
-            <div class="field">
-              <label>Estoque mínimo (alerta)</label>
-              <input type="number" placeholder="5">
-            </div>
-
-            <div class="field field-full">
-              <label>Fotos do produto</label>
-              <div class="upload-box" id="uploadBox">
-                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <span>Clique ou arraste as fotos aqui</span>
-                <span class="hint">PNG ou JPG — a primeira foto vira a capa do produto</span>
-              </div>
-            </div>
-
-            <div class="field field-full flags-row">
-              <label class="flag-check"><input type="checkbox"><span>Produto em destaque</span></label>
-              <label class="flag-check"><input type="checkbox"><span>Marcar como Novo</span></label>
-              <label class="flag-check"><input type="checkbox"><span>Em promoção</span></label>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-cancel" id="btnCancelar">Cancelar</button>
-            <button type="submit" class="btn-save">Salvar Produto</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- ============================================================
-           LISTA DE PRODUTOS CADASTRADOS
-           ============================================================ -->
-      <div class="panel reveal">
-        <div class="panel-head">
-          <div><h3>Produtos Cadastrados</h3><span class="sub">Tudo que já está (ou não) na vitrine do site</span></div>
-          <div class="chip-group" id="filterChips">
-            <button class="chip active" data-filter="todos">Todos</button>
-            <button class="chip" data-filter="Vestidos">Vestidos</button>
-            <button class="chip" data-filter="Blusas">Blusas</button>
-            <button class="chip" data-filter="Perfumes">Perfumes</button>
-            <button class="chip" data-filter="Sapatos">Sapatos</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th><th>Vitrine</th><th></th></tr></thead>
-            <tbody id="productsBody"></tbody>
-          </table>
-        </div>
+        <h3 style="font-family:var(--font-display);font-size:22px;margin-bottom:10px;">Módulo em construção</h3>
+        <p style="color:var(--gray);font-size:13.5px;max-width:420px;margin:0 auto;">
+          Essa área de <strong>estoque</strong> já está reservada e protegida no sistema — a gente monta o conteúdo completo dela no próximo passo.
+        </p>
       </div>
     </div>
   </div>
@@ -685,148 +529,6 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-/* ============================================================
-   CADASTRO DE PRODUTOS — lógica de tipo -> vitrine
-   ============================================================ */
-let produtos = [
-  { nome:'Vestido Midi Alfaiataria', categoria:'Vestidos', preco:389.90, estoque:24, vitrine:true,
-    img:'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=100&q=70&auto=format&fit=crop' },
-  { nome:'Perfume Fleur Noir 100ml', categoria:'Perfumes', preco:459.00, estoque:11, vitrine:true,
-    img:'https://images.unsplash.com/photo-1543422655-ac1c6ca993ed?w=100&q=70&auto=format&fit=crop' },
-  { nome:'Blazer Alfaiataria Premium', categoria:'Blusas', preco:299.90, estoque:3, vitrine:false,
-    img:'https://images.unsplash.com/photo-1571513722275-4b41940f54b8?w=100&q=70&auto=format&fit=crop' },
-  { nome:'Sandália Salto Bloco', categoria:'Sapatos', preco:349.90, estoque:0, vitrine:false,
-    img:'https://images.unsplash.com/photo-1651126581286-a6ae76cb5c78?w=100&q=70&auto=format&fit=crop' },
-];
-
-let tipoSelecionado = null;
-
-const stepType = document.getElementById('stepType');
-const stepForm = document.getElementById('stepForm');
-const typeChip = document.getElementById('typeChip');
-const typeChipText = document.getElementById('typeChipText');
-
-function abrirFormulario(tipo){
-  tipoSelecionado = tipo;
-  typeChip.textContent = tipo;
-  typeChipText.textContent = tipo;
-  stepType.style.display = 'none';
-  stepForm.style.display = 'block';
-  stepForm.scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-function fecharFormulario(){
-  stepForm.style.display = 'none';
-  stepType.style.display = 'block';
-  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('productForm').reset();
-}
-
-document.querySelectorAll('.type-card').forEach(card => {
-  card.addEventListener('click', () => {
-    document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    setTimeout(() => abrirFormulario(card.dataset.type), 150);
-  });
-});
-
-document.getElementById('btnNovoProduto').addEventListener('click', () => {
-  stepType.style.display = 'block';
-  stepForm.style.display = 'none';
-  stepType.scrollIntoView({ behavior:'smooth', block:'start' });
-});
-
-document.getElementById('btnTrocarTipo').addEventListener('click', fecharFormulario);
-document.getElementById('btnCancelar').addEventListener('click', fecharFormulario);
-
-document.getElementById('productForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const nomeInput = e.target.querySelector('input[type="text"]');
-  const precoInput = e.target.querySelector('input[type="number"]');
-  const nome = nomeInput.value || `Novo produto (${tipoSelecionado})`;
-  const preco = parseFloat(precoInput.value) || 0;
-
-  produtos.unshift({
-    nome, categoria: tipoSelecionado, preco, estoque: 10, vitrine: true,
-    img: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=100&q=70&auto=format&fit=crop'
-  });
-
-  renderProdutos();
-  showToast(`"${nome}" cadastrado! Já está na vitrine de ${tipoSelecionado}.`);
-  fecharFormulario();
-});
-
-/* ---------- LISTA / FILTRO ---------- */
-let filtroAtivo = 'todos';
-
-function money(v){ return v.toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
-
-function renderProdutos(){
-  const body = document.getElementById('productsBody');
-  const lista = filtroAtivo === 'todos' ? produtos : produtos.filter(p => p.categoria === filtroAtivo);
-
-  if (lista.length === 0){
-    body.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:30px;">Nenhum produto nessa categoria ainda.</td></tr>`;
-    return;
-  }
-
-  body.innerHTML = lista.map((p, i) => `
-    <tr>
-      <td><div class="prod-row"><img src="${p.img}" class="prod-thumb" alt="${p.nome}"><div class="prod-info"><strong>${p.nome}</strong></div></div></td>
-      <td>${p.categoria}</td>
-      <td>R$ ${money(p.preco)}</td>
-      <td>${p.estoque === 0 ? '<span style="color:var(--danger);font-weight:600;">Esgotado</span>' : p.estoque}</td>
-      <td>
-        <span class="showcase-pill ${p.vitrine ? 'showcase-on' : 'showcase-off'}" data-idx="${produtos.indexOf(p)}" style="cursor:pointer;">
-          ${p.vitrine ? '● Na vitrine' : '○ Oculto'}
-        </span>
-      </td>
-      <td>
-        <button class="row-action" aria-label="Editar"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>
-      </td>
-    </tr>
-  `).join('');
-
-  body.querySelectorAll('.showcase-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      const idx = pill.dataset.idx;
-      produtos[idx].vitrine = !produtos[idx].vitrine;
-      renderProdutos();
-    });
-  });
-}
-renderProdutos();
-
-document.querySelectorAll('#filterChips .chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelector('#filterChips .chip.active').classList.remove('active');
-    chip.classList.add('active');
-    filtroAtivo = chip.dataset.filter;
-    renderProdutos();
-  });
-});
-
-/* ---------- TOAST ---------- */
-let toastEl = document.getElementById('toast');
-if (!toastEl){
-  toastEl = document.createElement('div');
-  toastEl.className = 'toast';
-  toastEl.id = 'toast';
-  toastEl.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span>`;
-  document.body.appendChild(toastEl);
-  const style = document.createElement('style');
-  style.textContent = `.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);z-index:3000;background:#2D2D2D;color:#fff;padding:16px 26px;border-radius:100px;font-size:13px;display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.22,1,.36,1);box-shadow:0 20px 60px rgba(45,45,45,.2);}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-  .toast svg{width:16px;height:16px;stroke:#4CAF50;fill:none;stroke-width:2;}`;
-  document.head.appendChild(style);
-}
-let toastTimer;
-function showToast(msg){
-  document.getElementById('toastMsg').textContent = msg;
-  toastEl.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
-}
 </script>
 </body>
 </html>
