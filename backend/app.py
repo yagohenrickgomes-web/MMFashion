@@ -59,6 +59,14 @@ def create_app():
     def google_site_verification():
         return send_from_directory(FRONTEND_DIR, 'googlebb48457dd932da18.html')
 
+    @app.route('/sitemap.xml')
+    def sitemap():
+        return send_from_directory(FRONTEND_DIR, 'sitemap.xml', mimetype='application/xml')
+
+    @app.route('/robots.txt')
+    def robots():
+        return send_from_directory(FRONTEND_DIR, 'robots.txt', mimetype='text/plain')
+
     # ============================================================
     # URLS LIMPAS (sem expor a estrutura de pastas /pages e /admin)
     # ============================================================

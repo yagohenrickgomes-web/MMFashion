@@ -620,7 +620,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{
       <h1>Nova Coleção<br><em>Feminina</em></h1>
       <p>Peças autorais, perfumaria assinada e acessórios selecionados para compor um estilo só seu.</p>
       <div class="hero-btns">
-        <a href="#produtos" class="btn btn-primary">Comprar Agora</a>
+        <a href="#produtos" class="btn btn-primary">Saiba Mais</a>
         <a href="#novidades" class="btn btn-outline">Ver Coleção</a>
       </div>
     </div>
@@ -659,7 +659,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 </section>
 
 <!-- ============================================================
-     VITRINE / PRODUTOS
+     VITRINE — EM DESENVOLVIMENTO (sem produtos reais ainda)
      ============================================================ -->
 <section class="section" id="produtos" style="background:var(--white);">
   <div class="container">
@@ -669,17 +669,40 @@ a:focus-visible, button:focus-visible, input:focus-visible{
       <p>Navegue pelas coleções e descubra as peças do momento.</p>
     </div>
 
-    <div class="tabs reveal">
-      <button class="tab-btn active" data-tab="novidades">Novidades</button>
-      <button class="tab-btn" data-tab="vendidos">Mais Vendidos</button>
-      <button class="tab-btn" data-tab="promocoes">Promoções</button>
-      <button class="tab-btn" data-tab="lancamentos">Lançamentos</button>
-      <button class="tab-btn" data-tab="premium">Coleção Premium</button>
+    <div class="coming-soon-card reveal">
+      <div class="coming-soon-img">
+        <img src="https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=700&q=80&auto=format&fit=crop" alt="Prévia da coleção MM Fashion">
+      </div>
+      <div class="coming-soon-text">
+        <span class="coming-soon-badge">✦ Em breve</span>
+        <h3>Estamos preparando tudo com muito carinho</h3>
+        <p>Nossa vitrine ainda está sendo montada — logo, logo você vai poder ver e comprar cada peça da coleção por aqui. Enquanto isso, dá uma espiadinha no nosso Instagram pra acompanhar os bastidores e ser a primeira a saber quando abrirmos! 💛</p>
+        <a href="https://instagram.com/mmfashion.oficial" target="_blank" rel="noopener" class="btn btn-outline">Seguir no Instagram</a>
+      </div>
     </div>
-
-    <div class="product-grid" id="productGrid"></div>
   </div>
 </section>
+
+<style>
+.coming-soon-card{
+  display:grid; grid-template-columns:1fr 1.2fr; gap:0; border-radius:var(--radius-lg);
+  overflow:hidden; box-shadow:var(--shadow-md); background:var(--bg);
+}
+.coming-soon-img{ position:relative; min-height:320px; }
+.coming-soon-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.coming-soon-text{ padding:50px 46px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+.coming-soon-badge{
+  font-size:11px; letter-spacing:.15em; text-transform:uppercase; font-weight:600; color:var(--gold);
+  background:rgba(200,169,106,.12); padding:7px 16px; border-radius:100px; margin-bottom:18px;
+}
+.coming-soon-text h3{ font-size:clamp(22px,2.6vw,30px); margin-bottom:16px; line-height:1.25; }
+.coming-soon-text p{ color:var(--gray); font-size:14px; line-height:1.8; margin-bottom:26px; max-width:440px; }
+@media (max-width:900px){
+  .coming-soon-card{ grid-template-columns:1fr; }
+  .coming-soon-img{ min-height:220px; }
+  .coming-soon-text{ padding:36px 26px; }
+}
+</style>
 
 <!-- ============================================================
      BENEFÍCIOS
@@ -975,119 +998,6 @@ const io = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.15 });
 revealEls.forEach(el => io.observe(el));
-
-/* ============================================================
-   PRODUCT DATA + RENDER
-   ============================================================ */
-const IMG = {
-  vestido1:'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=600&q=80&auto=format&fit=crop',
-  vestido2:'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?w=600&q=80&auto=format&fit=crop',
-  blusa1:'https://images.unsplash.com/photo-1571513722275-4b41940f54b8?w=600&q=80&auto=format&fit=crop',
-  blusa2:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&q=80&auto=format&fit=crop',
-  calca1:'https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?w=600&q=80&auto=format&fit=crop',
-  bolsa1:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=80&auto=format&fit=crop',
-  bolsa2:'https://images.unsplash.com/photo-1513094735237-8f2714d57c13?w=600&q=80&auto=format&fit=crop',
-  sapato1:'https://images.unsplash.com/photo-1651126581286-a6ae76cb5c78?w=600&q=80&auto=format&fit=crop',
-  perfume1:'https://images.unsplash.com/photo-1543422655-ac1c6ca993ed?w=600&q=80&auto=format&fit=crop',
-  acessorio1:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80&auto=format&fit=crop',
-  acessorio2:'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=600&q=80&auto=format&fit=crop',
-  roupa1:'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=600&q=80&auto=format&fit=crop',
-};
-
-const PRODUCTS = {
-  novidades: [
-    { name:'Vestido Midi Alfaiataria', brand:'MM Fashion', price:389.90, old:null, tag:'new', stars:5, label:'Vestido', img:IMG.vestido1 },
-    { name:'Blusa Cropped Seda', brand:'MM Studio', price:219.90, old:null, tag:'new', stars:4, label:'Blusa', img:IMG.blusa1 },
-    { name:'Perfume Fleur Noir 100ml', brand:'MM Parfum', price:459.00, old:null, tag:'new', stars:5, label:'Perfume', img:IMG.perfume1 },
-    { name:'Calça Wide Leg Alfaiataria', brand:'MM Studio', price:329.90, old:null, tag:'new', stars:4, label:'Calça', img:IMG.calca1 },
-  ],
-  vendidos: [
-    { name:'Bolsa Tote Couro Legítimo', brand:'MM Fashion', price:589.90, old:null, tag:'best', stars:5, label:'Bolsa', img:IMG.bolsa1 },
-    { name:'Vestido Longo Estampado', brand:'MM Studio', price:459.90, old:null, tag:'best', stars:5, label:'Vestido', img:IMG.vestido2 },
-    { name:'Batom Matte Longa Duração', brand:'MM Beauty', price:79.90, old:null, tag:'best', stars:4, label:'Cosmético', img:IMG.roupa1 },
-    { name:'Sandália Salto Bloco', brand:'MM Studio', price:349.90, old:null, tag:'best', stars:4, label:'Sapato', img:IMG.sapato1 },
-  ],
-  promocoes: [
-    { name:'Blazer Alfaiataria Premium', brand:'MM Fashion', price:299.90, old:499.90, tag:'promo', stars:5, label:'Blazer', img:IMG.blusa2 },
-    { name:'Perfume Rosé Éclat 75ml', brand:'MM Parfum', price:259.00, old:399.00, tag:'promo', stars:4, label:'Perfume', img:IMG.perfume1 },
-    { name:'Conjunto Tricô Cropped', brand:'MM Studio', price:189.90, old:289.90, tag:'promo', stars:4, label:'Conjunto', img:IMG.blusa1 },
-    { name:'Óculos de Sol Oversized', brand:'MM Fashion', price:159.90, old:249.90, tag:'promo', stars:5, label:'Acessório', img:IMG.acessorio1 },
-  ],
-  lancamentos: [
-    { name:'Vestido Slip Cetim', brand:'MM Fashion', price:349.90, old:null, tag:'new', stars:5, label:'Vestido', img:IMG.vestido1 },
-    { name:'Kit Skincare Facial', brand:'MM Beauty', price:229.90, old:null, tag:'new', stars:4, label:'Cosmético', img:IMG.roupa1 },
-    { name:'Colar Camadas Dourado', brand:'MM Studio', price:129.90, old:null, tag:'new', stars:5, label:'Acessório', img:IMG.acessorio2 },
-    { name:'Body Renda Decote V', brand:'MM Fashion', price:169.90, old:null, tag:'new', stars:4, label:'Body', img:IMG.vestido2 },
-  ],
-  premium: [
-    { name:'Vestido Longo Bordado à Mão', brand:'MM Atelier', price:1289.00, old:null, tag:'best', stars:5, label:'Vestido', img:IMG.vestido1 },
-    { name:'Perfume Édition Privée 100ml', brand:'MM Parfum', price:899.00, old:null, tag:'best', stars:5, label:'Perfume', img:IMG.perfume1 },
-    { name:'Bolsa Clutch Couro Italiano', brand:'MM Atelier', price:1049.00, old:null, tag:'best', stars:5, label:'Bolsa', img:IMG.bolsa2 },
-    { name:'Casaco Alfaiataria Lã', brand:'MM Atelier', price:1189.00, old:null, tag:'best', stars:5, label:'Casaco', img:IMG.calca1 },
-  ],
-};
-
-const tagMap = {
-  promo: { cls:'tag-promo', label:'Promoção' },
-  new:   { cls:'tag-new',   label:'Novo' },
-  best:  { cls:'tag-best',  label:'Mais Vendido' },
-};
-
-function starsSVG(count){
-  let out = '';
-  for (let i=0; i<5; i++){
-    out += `<svg viewBox="0 0 24 24" style="opacity:${i<count?1:.25}"><polygon points="12 2 15 9 22 9 16 14 18 21 12 17 6 21 8 14 2 9 9 9"/></svg>`;
-  }
-  return out;
-}
-
-function money(v){ return v.toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
-
-function renderProducts(tabKey){
-  const grid = document.getElementById('productGrid');
-  const items = PRODUCTS[tabKey] || PRODUCTS.novidades;
-  grid.innerHTML = items.map(p => {
-    const tag = tagMap[p.tag];
-    const discount = p.old ? Math.round(100 - (p.price/p.old*100)) : null;
-    return `
-      <article class="product-card">
-        <div class="product-media">
-          <img src="${p.img}" alt="${p.name} — ${p.brand}" loading="lazy">
-          <div class="product-tags"><span class="tag ${tag.cls}">${tag.label}</span></div>
-          <button class="fav-btn" aria-label="Favoritar ${p.name}">
-            <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-          </button>
-          <button class="quick-add" data-name="${p.name}">Comprar</button>
-        </div>
-        <div class="product-info">
-          <div class="product-brand">${p.brand}</div>
-          <div class="product-name">${p.name}</div>
-          <div class="stars">${starsSVG(p.stars)}</div>
-          <div class="price-row">
-            <span class="price">R$ ${money(p.price)}</span>
-            ${p.old ? `<span class="price-old">R$ ${money(p.old)}</span><span class="discount">-${discount}%</span>` : ''}
-          </div>
-        </div>
-      </article>
-    `;
-  }).join('');
-
-  grid.querySelectorAll('.fav-btn').forEach(btn => {
-    btn.addEventListener('click', () => btn.classList.toggle('active'));
-  });
-  grid.querySelectorAll('.quick-add').forEach(btn => {
-    btn.addEventListener('click', () => showToast(`${btn.dataset.name} adicionado ao carrinho`));
-  });
-}
-
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelector('.tab-btn.active').classList.remove('active');
-    btn.classList.add('active');
-    renderProducts(btn.dataset.tab);
-  });
-});
-renderProducts('novidades');
 
 /* ============================================================
    TOAST
