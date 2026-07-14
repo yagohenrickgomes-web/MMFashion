@@ -55,6 +55,10 @@ def create_app():
     def home():
         return send_from_directory(FRONTEND_DIR, 'index.html')
 
+    @app.route('/googlebb48457dd932da18.html')
+    def google_site_verification():
+        return send_from_directory(FRONTEND_DIR, 'googlebb48457dd932da18.html')
+
     # ============================================================
     # URLS LIMPAS (sem expor a estrutura de pastas /pages e /admin)
     # ============================================================
