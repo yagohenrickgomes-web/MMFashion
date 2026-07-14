@@ -13,8 +13,14 @@ class Config:
     DB_PORT = os.environ.get('DB_PORT', '5432')
     DB_NAME = os.environ.get('DB_NAME', 'mmfashion')
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL',
+    # Railway (e Heroku) às vezes fornecem DATABASE_URL vazia (variável existe mas sem valor,
+    # quando a referência ao Postgres ainda não resolveu) ou no formato antigo "postgres://",
+    # que o SQLAlchemy 2.x não aceita. Tratamos os dois casos aqui.
+    _database_url = (os.environ.get('DATABASE_URL') or '').strip()
+    if _database_url.startswith('postgres://'):
+        _database_url = _database_url.replace('postgres://', 'postgresql://', 1)
+
+    SQLALCHEMY_DATABASE_URI = _database_url or (
         f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
