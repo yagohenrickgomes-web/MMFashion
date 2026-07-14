@@ -138,7 +138,7 @@ body{
     </form>
   </div>
 
-  <a href="../index.html" class="back-link">← Voltar para a loja</a>
+  <a href="/" class="back-link">← Voltar para a loja</a>
 </div>
 
 <script>
@@ -200,7 +200,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 
     // O backend já diz pra onde ir: painel admin (se for da equipe) ou a loja (se for cliente)
-    window.location.href = data.redirect || '../index.html';
+    window.location.href = data.redirect || '/';
   } catch (err) {
     showMsg('Erro de conexão. Verifique sua internet e tente de novo.', 'error');
     btn.disabled = false;

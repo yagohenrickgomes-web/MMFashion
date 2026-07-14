@@ -55,6 +55,34 @@ def create_app():
     def home():
         return send_from_directory(FRONTEND_DIR, 'index.html')
 
+    # ============================================================
+    # URLS LIMPAS (sem expor a estrutura de pastas /pages e /admin)
+    # ============================================================
+    @app.route('/login')
+    def login_page():
+        return send_from_directory(os.path.join(FRONTEND_DIR, 'pages'), 'login.html')
+
+    @app.route('/carrinho')
+    def carrinho_page():
+        return send_from_directory(os.path.join(FRONTEND_DIR, 'pages'), 'carrinho.html')
+
+    @app.route('/produto')
+    def produto_page():
+        return send_from_directory(os.path.join(FRONTEND_DIR, 'pages'), 'produto.html')
+
+    @app.route('/admin')
+    @app.route('/admin/')
+    def admin_home():
+        if not current_user.is_authenticated or not isinstance(current_user._get_current_object(), Funcionario):
+            return redirect('/login?admin=1')
+        return send_from_directory(os.path.join(FRONTEND_DIR, 'admin'), 'painel-admin.html')
+
+    @app.route('/admin/produtos')
+    def admin_produtos_page():
+        if not current_user.is_authenticated or not isinstance(current_user._get_current_object(), Funcionario):
+            return redirect('/login?admin=1')
+        return send_from_directory(os.path.join(FRONTEND_DIR, 'admin'), 'produtos-admin.html')
+
     @app.route('/pages/<path:filename>')
     def pages(filename):
         return send_from_directory(os.path.join(FRONTEND_DIR, 'pages'), filename)
@@ -104,7 +132,7 @@ def create_app():
                 'mensagem': 'Login realizado!',
                 'nome': func.nome,
                 'tipo': 'funcionario',
-                'redirect': '/admin/painel-admin.html',
+                'redirect': '/admin',
             })
 
         # 2) Tenta como CLIENTE (loja)
@@ -117,7 +145,7 @@ def create_app():
                 'mensagem': 'Login realizado!',
                 'nome': cliente.nome,
                 'tipo': 'cliente',
-                'redirect': '/index.html',
+                'redirect': '/',
             })
 
         # Mesma mensagem pros dois casos — não dá pra descobrir se o e-mail existe ou não
