@@ -183,6 +183,36 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   CATEGORIAS
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'categorias',
+  title: 'Categorias',
+  itemLabel: 'Categoria',
+  subtitle: 'Organize as categorias que aparecem na vitrine do site',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'nome', label:'Nome' },
+    { key:'slug', label:'Slug (usado na URL)' },
+  ],
+  fields: [
+    { key:'nome', label:'Nome da categoria', required:true },
+    { key:'slug', label:'Slug', required:true },
+  ],
+  sampleData: [
+    { nome:'Vestidos', slug:'vestidos' },
+    { nome:'Blusas', slug:'blusas' },
+    { nome:'Calças', slug:'calcas' },
+    { nome:'Bolsas', slug:'bolsas' },
+    { nome:'Sapatos', slug:'sapatos' },
+    { nome:'Perfumes', slug:'perfumes' },
+    { nome:'Cosméticos', slug:'cosmeticos' },
+    { nome:'Acessórios', slug:'acessorios' },
+  ],
+});
 </script>
 </body>
 </html>

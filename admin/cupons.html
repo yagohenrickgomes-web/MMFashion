@@ -183,6 +183,34 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   CUPONS
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'cupons',
+  title: 'Cupons',
+  itemLabel: 'Cupom',
+  subtitle: 'Crie e gerencie cupons de desconto da loja',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'codigo', label:'Código' },
+    { key:'tipo', label:'Tipo' },
+    { key:'valor', label:'Valor', render:(i)=> i.tipo === 'Percentual' ? `${i.valor}%` : 'R$ ' + AdminCRUD.money(i.valor) },
+    { key:'validade', label:'Validade' },
+  ],
+  fields: [
+    { key:'codigo', label:'Código do cupom', required:true },
+    { key:'tipo', label:'Tipo', type:'select', options:['Percentual','Valor Fixo'] },
+    { key:'valor', label:'Valor', type:'number', required:true },
+    { key:'validade', label:'Validade', type:'date' },
+  ],
+  sampleData: [
+    { codigo:'MMF10', tipo:'Percentual', valor:10, validade:'2026-12-31' },
+    { codigo:'BEMVINDA', tipo:'Percentual', valor:15, validade:'2026-12-31' },
+  ],
+});
 </script>
 </body>
 </html>

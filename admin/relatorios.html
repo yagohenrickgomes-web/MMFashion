@@ -194,6 +194,36 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   RELATÓRIOS — soma o que já existe nos outros módulos
+   ============================================================ */
+(function renderReports(){
+  function getData(key){
+    try { return JSON.parse(localStorage.getItem('mmfashion_' + key) || '[]'); }
+    catch(e){ return []; }
+  }
+  const pedidos = getData('pedidos');
+  const financeiro = getData('financeiro');
+  const clientes = getData('clientes_admin');
+
+  const receitaTotal = financeiro.filter(f => f.tipo === 'Receita').reduce((s,f) => s + (parseFloat(f.valor)||0), 0);
+  const despesaTotal = financeiro.filter(f => f.tipo === 'Despesa').reduce((s,f) => s + (parseFloat(f.valor)||0), 0);
+
+  const cards = [
+    { label:'Pedidos cadastrados', valor: pedidos.length },
+    { label:'Receita total', valor: 'R$ ' + AdminCRUD.money(receitaTotal) },
+    { label:'Despesas totais', valor: 'R$ ' + AdminCRUD.money(despesaTotal) },
+    { label:'Clientes cadastrados', valor: clientes.length },
+  ];
+
+  document.getElementById('reportCards').innerHTML = cards.map(c => `
+    <div class="kpi-card reveal is-visible">
+      <div class="kpi-value">${c.valor}</div>
+      <div class="kpi-label">${c.label}</div>
+    </div>
+  `).join('');
+})();
 </script>
 </body>
 </html>

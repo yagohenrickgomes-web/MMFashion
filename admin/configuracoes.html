@@ -222,6 +222,32 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   CONFIGURAÇÕES — formulário único salvo no localStorage por enquanto
+   ============================================================ */
+(function initConfigForm(){
+  const form = document.getElementById('configForm');
+  if (!form) return;
+  const defaults = { nomeLoja:'MM Fashion', whatsapp:'5511999999999', instagram:'mmfashion.oficial',
+    email:'contato@mmfashion.com.br', telefone:'', freteGratis:299, corDestaque:'#C8A96A' };
+
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('mmfashion_config') || '{}'); } catch(e){}
+  const dados = { ...defaults, ...saved };
+  Object.keys(dados).forEach(k => {
+    const el = form.querySelector(`[name="${k}"]`);
+    if (el) el.value = dados[k];
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const novo = {};
+    Object.keys(defaults).forEach(k => { novo[k] = form.querySelector(`[name="${k}"]`).value; });
+    localStorage.setItem('mmfashion_config', JSON.stringify(novo));
+    AdminCRUD.showToast('Configurações salvas!');
+  });
+})();
 </script>
 </body>
 </html>

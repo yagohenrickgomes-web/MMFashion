@@ -183,6 +183,36 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   FUNCIONÁRIOS
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'funcionarios_admin',
+  title: 'Funcionários',
+  itemLabel: 'Funcionário(a)',
+  subtitle: 'Equipe com acesso ao painel administrativo',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'nome', label:'Nome' },
+    { key:'email', label:'E-mail' },
+    { key:'cargo', label:'Cargo' },
+    { key:'permissao', label:'Permissão' },
+  ],
+  fields: [
+    { key:'nome', label:'Nome completo', required:true },
+    { key:'email', label:'E-mail', type:'email', required:true },
+    { key:'cargo', label:'Cargo' },
+    { key:'permissao', label:'Permissão', type:'select', options:['admin','usuario'] },
+  ],
+  sampleData: [
+    { nome:'Melissa Mel', email:'melissa@mmfashion.com.br', cargo:'Proprietária', permissao:'admin' },
+    { nome:'Yago Gomes', email:'yago@mmfashion.com.br', cargo:'Desenvolvedor', permissao:'admin' },
+  ],
+});
+// Nota: esta lista é só visual por enquanto. Pra um(a) novo(a) funcionário(a)
+// conseguir logar de verdade, a conta precisa ser criada no banco.
 </script>
 </body>
 </html>

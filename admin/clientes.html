@@ -183,6 +183,33 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   CLIENTES
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'clientes_admin',
+  title: 'Clientes',
+  itemLabel: 'Cliente',
+  subtitle: 'Cadastro de clientes da loja (a lista oficial vem do banco de dados)',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'nome', label:'Nome' },
+    { key:'email', label:'E-mail' },
+    { key:'telefone', label:'Telefone' },
+  ],
+  fields: [
+    { key:'nome', label:'Nome completo', required:true },
+    { key:'email', label:'E-mail', type:'email', required:true },
+    { key:'telefone', label:'Telefone', required:true },
+  ],
+  sampleData: [
+    { nome:'Marina Costa', email:'marina@email.com', telefone:'(11) 98888-1111' },
+    { nome:'Juliana Prado', email:'juliana@email.com', telefone:'(11) 98888-2222' },
+    { nome:'Beatriz Lima', email:'beatriz@email.com', telefone:'(11) 98888-3333' },
+  ],
+});
 </script>
 </body>
 </html>

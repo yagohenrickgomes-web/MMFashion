@@ -183,6 +183,41 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   PEDIDOS
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'pedidos',
+  title: 'Pedidos',
+  itemLabel: 'Pedido',
+  subtitle: 'Acompanhe e atualize o status de cada venda',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'numero', label:'Pedido' },
+    { key:'cliente', label:'Cliente' },
+    { key:'total', label:'Total', render:(i)=> 'R$ ' + AdminCRUD.money(i.total) },
+    { key:'status', label:'Status', render:(i)=> {
+        const cores = { 'Processando':'#a8823f', 'Pago':'#4CAF50', 'Em Trânsito':'#C8A96A', 'Entregue':'#4CAF50', 'Cancelado':'#D64545' };
+        const cor = cores[i.status] || '#777';
+        return `<span style="font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;background:${cor}22;color:${cor};">${i.status}</span>`;
+      }},
+    { key:'data', label:'Data' },
+  ],
+  fields: [
+    { key:'numero', label:'Número do pedido', required:true },
+    { key:'cliente', label:'Cliente', required:true },
+    { key:'total', label:'Total (R$)', type:'number', required:true },
+    { key:'status', label:'Status', type:'select', options:['Processando','Pago','Em Trânsito','Entregue','Cancelado'] },
+    { key:'data', label:'Data', type:'date' },
+  ],
+  sampleData: [
+    { numero:'#MMF-2481', cliente:'Marina Costa', total:389.90, status:'Entregue', data:'2026-07-10' },
+    { numero:'#MMF-2480', cliente:'Juliana Prado', total:219.90, status:'Em Trânsito', data:'2026-07-12' },
+    { numero:'#MMF-2479', cliente:'Beatriz Lima', total:899.00, status:'Processando', data:'2026-07-13' },
+  ],
+});
 </script>
 </body>
 </html>

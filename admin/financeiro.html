@@ -183,6 +183,40 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   FINANCEIRO
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'financeiro',
+  title: 'Financeiro',
+  itemLabel: 'Lançamento',
+  subtitle: 'Receitas e despesas da loja',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'tipo', label:'Tipo', render:(i)=> {
+        const cor = i.tipo === 'Receita' ? '#4CAF50' : '#D64545';
+        return `<span style="font-size:11px;font-weight:600;padding:5px 12px;border-radius:100px;background:${cor}22;color:${cor};">${i.tipo}</span>`;
+      }},
+    { key:'categoria', label:'Categoria' },
+    { key:'descricao', label:'Descrição' },
+    { key:'valor', label:'Valor', render:(i)=> 'R$ ' + AdminCRUD.money(i.valor) },
+    { key:'data', label:'Data' },
+  ],
+  fields: [
+    { key:'tipo', label:'Tipo', type:'select', options:['Receita','Despesa'] },
+    { key:'categoria', label:'Categoria', required:true },
+    { key:'descricao', label:'Descrição', full:true },
+    { key:'valor', label:'Valor (R$)', type:'number', required:true },
+    { key:'data', label:'Data', type:'date' },
+  ],
+  sampleData: [
+    { tipo:'Receita', categoria:'Vendas', descricao:'Vendas do dia', valor:18420.00, data:'2026-07-14' },
+    { tipo:'Despesa', categoria:'Fornecedor', descricao:'Compra de tecidos', valor:3200.00, data:'2026-07-10' },
+    { tipo:'Despesa', categoria:'Marketing', descricao:'Anúncios Instagram', valor:450.00, data:'2026-07-08' },
+  ],
+});
 </script>
 </body>
 </html>

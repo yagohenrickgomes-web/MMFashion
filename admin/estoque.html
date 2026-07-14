@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Parisienne&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="/assets/css/admin.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -183,6 +184,113 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .1 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+
+/* ============================================================
+   ESTOQUE
+   ============================================================ */
+AdminCRUD.init({
+  storageKey: 'estoque',
+  title: 'Estoque',
+  itemLabel: 'Item de Estoque',
+  subtitle: 'Cadastre manualmente (com foto) ou importe uma planilha Excel',
+  searchable: true,
+  mountId: 'crudMount',
+  columns: [
+    { key:'foto', label:'Foto', render:(i)=> i.foto
+        ? `<img src="${i.foto}" style="width:38px;height:38px;border-radius:8px;object-fit:cover;">`
+        : `<div style="width:38px;height:38px;border-radius:8px;background:var(--bg);"></div>` },
+    { key:'produto', label:'Produto' },
+    { key:'variacao', label:'Cor / Tamanho' },
+    { key:'quantidade', label:'Estoque Atual', render:(i)=> {
+        const baixo = parseInt(i.quantidade) <= parseInt(i.minimo || 0);
+        return baixo ? `<span style="color:var(--danger);font-weight:600;">${i.quantidade} ⚠️</span>` : i.quantidade;
+      }},
+    { key:'minimo', label:'Estoque Mínimo' },
+  ],
+  fields: [
+    { key:'foto', label:'URL da foto do produto', full:true },
+    { key:'produto', label:'Produto', required:true },
+    { key:'variacao', label:'Cor / Tamanho' },
+    { key:'quantidade', label:'Quantidade atual', type:'number', required:true },
+    { key:'minimo', label:'Estoque mínimo (alerta)', type:'number', default:5 },
+  ],
+  sampleData: [
+    { produto:'Vestido Midi Alfaiataria', variacao:'Preto / M', quantidade:24, minimo:5,
+      foto:'https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=100&q=70&auto=format&fit=crop' },
+    { produto:'Perfume Fleur Noir 100ml', variacao:'—', quantidade:3, minimo:5,
+      foto:'https://images.unsplash.com/photo-1543422655-ac1c6ca993ed?w=100&q=70&auto=format&fit=crop' },
+    { produto:'Blazer Alfaiataria Premium', variacao:'Bege / P', quantidade:11, minimo:5,
+      foto:'https://images.unsplash.com/photo-1571513722275-4b41940f54b8?w=100&q=70&auto=format&fit=crop' },
+  ],
+});
+
+/* ---------- IMPORTAR VIA EXCEL ---------- */
+(function setupExcelImport(){
+  const panelHead = document.querySelector('#crudMount .panel-head > div:last-child');
+  if (!panelHead) return;
+
+  const importBtn = document.createElement('button');
+  importBtn.className = 'btn-cancel';
+  importBtn.type = 'button';
+  importBtn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:-2px;margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Importar Excel`;
+  panelHead.insertBefore(importBtn, panelHead.firstChild);
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.xlsx,.xls,.csv';
+  fileInput.style.display = 'none';
+  document.body.appendChild(fileInput);
+
+  importBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const wb = XLSX.read(evt.target.result, { type: 'binary' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+        const norm = (obj, keys) => {
+          for (const k of Object.keys(obj)) {
+            for (const target of keys) {
+              if (k.toLowerCase().trim() === target) return obj[k];
+            }
+          }
+          return '';
+        };
+
+        const novos = rows.map(r => ({
+          id: Date.now() + Math.random(),
+          produto: norm(r, ['produto','nome']),
+          variacao: norm(r, ['variacao','variação','cor/tamanho','cor / tamanho']),
+          quantidade: norm(r, ['quantidade','estoque','qtd']) || 0,
+          minimo: norm(r, ['minimo','mínimo','estoque minimo','estoque mínimo']) || 5,
+          foto: norm(r, ['foto','imagem','url foto']),
+        })).filter(i => i.produto);
+
+        if (novos.length === 0){
+          AdminCRUD.showToast('Nenhuma linha válida encontrada na planilha.');
+          return;
+        }
+
+        const key = 'mmfashion_estoque';
+        let atuais = [];
+        try { atuais = JSON.parse(localStorage.getItem(key) || '[]'); } catch(err){}
+        localStorage.setItem(key, JSON.stringify([...novos, ...atuais]));
+
+        AdminCRUD.showToast(`${novos.length} item(ns) importado(s) com sucesso!`);
+        setTimeout(() => location.reload(), 900);
+      } catch (err) {
+        AdminCRUD.showToast('Não foi possível ler essa planilha. Confira o formato.');
+      }
+    };
+    reader.readAsBinaryString(file);
+  });
+})();
 </script>
 </body>
 </html>
