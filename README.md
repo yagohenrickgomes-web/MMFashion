@@ -49,6 +49,38 @@ MM Fashion/
 
 4. Para parar o servidor: `Ctrl + C` no terminal.
 
+## Como publicar (Railway)
+
+1. Suba o projeto pro GitHub (se ainda não subiu):
+   ```cmd
+   cd "C:\Users\User\Desktop\Yago\Clientes\LOJA ROUPA\MM Fashion"
+   git add .
+   git commit -m "Deploy via Railway"
+   git push
+   ```
+
+2. Crie conta em https://railway.com (dá pra entrar direto com o GitHub).
+
+3. No painel do Railway: **New Project → Deploy from GitHub repo** → selecione o repositório `MMFashion`.
+
+4. Adicione o banco: dentro do projeto, clique em **+ New → Database → Add PostgreSQL**.
+   O Railway já cria a variável `DATABASE_URL` sozinho e conecta ao serviço web automaticamente.
+
+5. No serviço web, vá em **Settings → Variables** e confira/adicione:
+   - `SECRET_KEY` → uma string aleatória longa (pode gerar em https://randomkeygen.com)
+   - `FLASK_ENV` → `production`
+
+6. O Railway lê o `railway.json` sozinho e já sabe como instalar as dependências e iniciar o app.
+
+7. Depois do primeiro deploy, abra o **Shell** do serviço (ou rode localmente apontando pro banco do Railway) e execute uma vez:
+   ```cmd
+   cd backend
+   python init_db.py
+   ```
+   Isso cria as tabelas e o admin padrão (`admin@mmfashion.com.br` / `mudar123` — troque depois).
+
+8. O Railway te dá uma URL pública tipo `https://mmfashion-production.up.railway.app` — é só acessar. O painel fica em `/admin/painel-admin.html`.
+
 ## Próximos passos
 
 - Criar as páginas restantes de `pages/` e `admin/` seguindo a mesma identidade visual.
